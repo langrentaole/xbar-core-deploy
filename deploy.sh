@@ -57,18 +57,12 @@ validate() {
     echo "环境文件仍有占位值，请先完成配置：$ENV_FILE" >&2
     exit 1
   fi
-  for key in CORE_DOMAIN PUBLIC_URL ACME_EMAIL USER_UPSTREAM VIBE_GATEWAY_URL MYSQL_PASSWORD MYSQL_ROOT_PASSWORD COOKIE_KEY DATA_KEY VERIFICATION_KEY EDGE_INTERNAL_KEY VIBE_EDGE_SHARED_SECRET ADMIN_USERNAME ADMIN_EMAIL ADMIN_PASSWORD; do
+  for key in XBAR_CORE_IMAGE CORE_DOMAIN ACME_EMAIL USER_UPSTREAM VIBE_GATEWAY_URL MYSQL_PASSWORD MYSQL_ROOT_PASSWORD COOKIE_KEY DATA_KEY VERIFICATION_KEY EDGE_INTERNAL_KEY VIBE_EDGE_SHARED_SECRET ADMIN_USERNAME ADMIN_EMAIL ADMIN_PASSWORD TIMEZONE; do
     [ -n "$(read_value "$key")" ] || {
       echo "缺少必填配置：$key" >&2
       exit 1
     }
   done
-  core_domain=$(read_value CORE_DOMAIN)
-  public_url=$(read_value PUBLIC_URL)
-  [ "$public_url" = "https://$core_domain" ] || {
-    echo "PUBLIC_URL 必须等于 https://CORE_DOMAIN" >&2
-    exit 1
-  }
   case "$(read_value USER_UPSTREAM)" in http://*|https://*) ;; *) echo "USER_UPSTREAM 必须是 HTTP(S) 地址" >&2; exit 1 ;; esac
   case "$(read_value VIBE_GATEWAY_URL)" in https://*) ;; *) echo "VIBE_GATEWAY_URL 必须是 HTTPS 地址" >&2; exit 1 ;; esac
   [ "$(printf %s "$(read_value DATA_KEY)" | wc -c | tr -d ' ')" -eq 32 ] || {
@@ -143,4 +137,3 @@ case "$action" in
     exit 64
     ;;
 esac
-

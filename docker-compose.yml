@@ -8,7 +8,7 @@ x-core-service: &core-service
 
 services:
   db:
-    image: ${MYSQL_IMAGE:-mysql:8.0}
+    image: mysql:8.0
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: xbar
@@ -19,7 +19,7 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      - --binlog-expire-logs-seconds=${MYSQL_BINLOG_RETENTION_SECONDS:-604800}
+      - --binlog-expire-logs-seconds=604800
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
@@ -30,7 +30,7 @@ services:
       start_period: 10s
 
   cache:
-    image: ${REDIS_IMAGE:-redis:7.4-alpine}
+    image: redis:7.4-alpine
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
@@ -46,6 +46,7 @@ services:
     entrypoint: ["/usr/local/bin/mirror-api"]
     environment:
       ENVIRONMENT: production
+      PUBLIC_URL: https://${CORE_DOMAIN:?必须配置 CORE_DOMAIN}
       API_ADDR: :8080
       EDGE_ADDR: :3000
       MYSQL_DSN: xbar:${MYSQL_PASSWORD}@tcp(db:3306)/xbar?parseTime=true&loc=UTC&charset=utf8mb4
@@ -72,6 +73,7 @@ services:
     <<: *core-service
     environment:
       ENVIRONMENT: production
+      PUBLIC_URL: https://${CORE_DOMAIN:?必须配置 CORE_DOMAIN}
       API_ADDR: :8080
       EDGE_ADDR: :3000
       MYSQL_DSN: xbar:${MYSQL_PASSWORD}@tcp(db:3306)/xbar?parseTime=true&loc=UTC&charset=utf8mb4
@@ -92,7 +94,7 @@ services:
       start_period: 5s
 
   caddy:
-    image: ${CADDY_IMAGE:-caddy:2.10-alpine}
+    image: caddy:2.10-alpine
     env_file: ${XBAR_CORE_ENV_FILE:-.env}
     restart: unless-stopped
     ports:
@@ -113,4 +115,3 @@ volumes:
   redis-data:
   caddy-data:
   caddy-config:
-
