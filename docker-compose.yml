@@ -1,0 +1,116 @@
+name: xbar-core
+
+x-core-service: &core-service
+  image: ${XBAR_CORE_IMAGE:?必须配置 XBAR_CORE_IMAGE}
+  env_file: ${XBAR_CORE_ENV_FILE:-.env}
+  restart: unless-stopped
+  stop_grace_period: 31m
+
+services:
+  db:
+    image: ${MYSQL_IMAGE:-mysql:8.0}
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: xbar
+      MYSQL_USER: xbar
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?必须配置 MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?必须配置 MYSQL_ROOT_PASSWORD}
+      TZ: ${TIMEZONE:-Asia/Shanghai}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --binlog-expire-logs-seconds=${MYSQL_BINLOG_RETENTION_SECONDS:-604800}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  cache:
+    image: ${REDIS_IMAGE:-redis:7.4-alpine}
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  core-api:
+    <<: *core-service
+    entrypoint: ["/usr/local/bin/mirror-api"]
+    environment:
+      ENVIRONMENT: production
+      API_ADDR: :8080
+      EDGE_ADDR: :3000
+      MYSQL_DSN: xbar:${MYSQL_PASSWORD}@tcp(db:3306)/xbar?parseTime=true&loc=UTC&charset=utf8mb4
+      REDIS_ADDR: cache:6379
+      API_UPSTREAM: http://core-api:8080
+      USER_UPSTREAM: ${USER_UPSTREAM:?必须配置 USER_UPSTREAM}
+      ADMIN_DIST: /app/web/admin
+      LOG_DIR: /var/lib/xbar/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    volumes:
+      - api-logs:/var/lib/xbar/logs
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  core-edge:
+    <<: *core-service
+    environment:
+      ENVIRONMENT: production
+      API_ADDR: :8080
+      EDGE_ADDR: :3000
+      MYSQL_DSN: xbar:${MYSQL_PASSWORD}@tcp(db:3306)/xbar?parseTime=true&loc=UTC&charset=utf8mb4
+      REDIS_ADDR: cache:6379
+      API_UPSTREAM: http://core-api:8080
+      USER_UPSTREAM: ${USER_UPSTREAM:?必须配置 USER_UPSTREAM}
+      ADMIN_DIST: /app/web/admin
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      core-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--header=Host: ${CORE_DOMAIN}", "-qO-", "http://127.0.0.1:3000/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  caddy:
+    image: ${CADDY_IMAGE:-caddy:2.10-alpine}
+    env_file: ${XBAR_CORE_ENV_FILE:-.env}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      core-edge:
+        condition: service_healthy
+
+volumes:
+  api-logs:
+  mysql-data:
+  redis-data:
+  caddy-data:
+  caddy-config:
+

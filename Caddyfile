@@ -1,0 +1,15 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$CORE_DOMAIN} {
+	log {
+		output stdout
+		format json
+	}
+
+	reverse_proxy core-edge:3000 {
+		flush_interval -1
+	}
+}
+
