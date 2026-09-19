@@ -62,6 +62,7 @@ services:
         condition: service_healthy
     volumes:
       - api-logs:/var/lib/xbar/logs
+      - station-identity:/var/lib/xbar/identity
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/readyz"]
       interval: 5s
@@ -111,6 +112,7 @@ services:
 
 volumes:
   api-logs:
+  station-identity:
   mysql-data:
   redis-data:
   caddy-data:
