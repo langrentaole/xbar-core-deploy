@@ -25,6 +25,31 @@ read_value() {
   sed -n "s/^$1=//p" "$ENV_FILE" | tail -n 1
 }
 
+template_value() {
+  sed -n "s/^$1=//p" "$ROOT_DIR/.env.example" | tail -n 1
+}
+
+sync_release() {
+  image=$(template_value XBAR_CORE_IMAGE)
+  [ -n "$image" ] || {
+    echo "部署仓库缺少 XBAR_CORE_IMAGE 发布版本" >&2
+    exit 1
+  }
+  if [ "$(read_value XBAR_CORE_IMAGE)" != "$image" ]; then
+    replace_value XBAR_CORE_IMAGE "$image"
+    echo "已同步 Core 镜像版本：$image"
+  fi
+}
+
+show_station_id() {
+  station_id=$(compose exec -T -e "MYSQL_PWD=$(read_value MYSQL_PASSWORD)" db mysql -N -B -uxbar xbar -e "SELECT COALESCE(JSON_UNQUOTE(JSON_EXTRACT(certificate_json,'$.claims.stationId')),'') FROM local_station_license WHERE id=1 AND status='active' LIMIT 1" | tail -n 1)
+  if [ -z "$station_id" ] || [ "$station_id" = "NULL" ]; then
+    echo "当前 Core 尚未完成有效授权，无法取得 stationId" >&2
+    exit 1
+  fi
+  printf '%s\n' "$station_id"
+}
+
 initialize() {
   if [ -f "$ENV_FILE" ]; then
     echo "环境文件已存在，未覆盖：$ENV_FILE"
@@ -114,10 +139,16 @@ case "$action" in
     ;;
   update)
     require_docker
+    sync_release
     validate
     compose pull core-api core-edge
     compose up -d --wait --remove-orphans
     compose ps
+    ;;
+  station-id)
+    require_docker
+    validate
+    show_station_id
     ;;
   status)
     require_docker
@@ -135,7 +166,7 @@ case "$action" in
     compose down
     ;;
   *)
-    echo "用法：$0 {init|config|up|update|status|logs|down}" >&2
+    echo "用法：$0 {init|config|up|update|station-id|status|logs|down}" >&2
     exit 64
     ;;
 esac
