@@ -1,8 +1,8 @@
 # Core 0.024.35 — Grok 隔离更新
 
-源代码：`xbar-mirror` 提交 `51939b8`。
+源代码：`xbar-mirror` 提交 `a9345f2`。
 
-镜像：`langrentaole/xbar-core:0.024.35`（amd64、arm64）。本次发布的不可变摘要：`sha256:932e97ffc2d98751be9dee32c65a0f8106dead50686a9e9e7c7ae41a99082f6d`。
+镜像：`langrentaole/xbar-core:0.024.35`（amd64、arm64）。本次发布的不可变摘要：`sha256:51e7b672db89ca116aba270bd9c32e568a4c3a0260893b3430db56b7c0351c1c`。
 
 Grok Bot 在页面中隐藏，并在服务端禁用 Bot 页面、REST 和 WebSocket 通道。普通 Grok 对话继续提供服务。
 
