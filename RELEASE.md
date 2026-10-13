@@ -1,8 +1,8 @@
 # Core 0.024.35 — Grok 隔离更新
 
-源代码：`xbar-mirror` 提交 `a9345f2`。
+源代码：`xbar-mirror` 提交 `ebed23b`。
 
-镜像：`langrentaole/xbar-core:0.024.35`（amd64、arm64）。本次发布的不可变摘要：`sha256:51e7b672db89ca116aba270bd9c32e568a4c3a0260893b3430db56b7c0351c1c`。
+镜像：`langrentaole/xbar-core:0.024.35`（amd64、arm64）。本次发布的不可变摘要：`sha256:bafff7973561c510190e1444ecdb36f76f25711a2ba13722e36291aa40fbdde9`。
 
 Grok Bot 在页面中隐藏，并在服务端禁用 Bot 页面、REST 和 WebSocket 通道。普通 Grok 对话继续提供服务。
 
@@ -10,4 +10,8 @@ Grok Bot 在页面中隐藏，并在服务端禁用 Bot 页面、REST 和 WebSoc
 
 升级会执行新增的 `00126_grok_media_ownership.sql`。更新前备份数据库和环境文件；由于镜像版本号保持不变，必须重新拉取镜像并重建 `core-api`、`core-edge`，不能只重启旧容器。
 
+同时修复 Imagine HTTP 视频生成未记录归属、完成帧后断流丢失历史、刷新后缺少视频附件元数据的问题。视频与封面先归档再下发本站资源 URL；后续文本帧更新同一轮消息，不重复追加。
+
 验证：全量 Go 测试、`go vet`、Grok/会话/Edge 竞态测试通过；已确认的安全复核阻断项均关闭。
+
+线上实测：Bot 入口隐藏、接口禁用，普通对话、文本附件上传/预览/读取、图片生成/预览、6 秒视频生成/播放及刷新恢复通过。跨用户与跨车队隔离使用自动化回归验证；未将单站内用户实测描述为两个真实用户的完整端到端验收。
