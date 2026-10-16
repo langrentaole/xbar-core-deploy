@@ -75,7 +75,7 @@ for action in update install up; do
   run "$action" || { cat "$TMP/output"; fail "127 $action failed"; }
   grep -q '^helper .*--apply' "$MOCK_LOG" || fail "127 $action bypassed coordinated helper"
   grep -q -- '--project test-project' "$MOCK_LOG" || fail 'resolved project not forwarded'
-  grep -q -- '--image langrentaole/xbar-core@sha256:0628cb522634c39a2fede311bb5da2adf4ae3c1d77c1ae44862efef9c799c89c' "$MOCK_LOG" || fail 'wrong migration target'
+  grep -q -- '--image langrentaole/xbar-core@sha256:1986fc29307d3157e1f6d4ca5ed74f1903c85a6b309f43c3ff46975c4d0b7f34' "$MOCK_LOG" || fail 'wrong migration target'
   if grep -Eq '^docker .* (up|pull) ' "$MOCK_LOG"; then fail "127 $action ran ordinary deployment"; fi
   echo "PASS: schema 127 $action uses coordinated upgrade"
 done

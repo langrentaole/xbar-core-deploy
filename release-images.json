@@ -1,0 +1,35 @@
+{
+  "version": "0.024.40",
+  "images": {
+    "core": {
+      "repository": "https://github.com/langrentaole/xbar-mirror",
+      "revision": "12dc522697fc9498353354ca612d14022e2b171a",
+      "tag": "langrentaole/xbar-core:0.024.40",
+      "image": "langrentaole/xbar-core@sha256:1986fc29307d3157e1f6d4ca5ed74f1903c85a6b309f43c3ff46975c4d0b7f34"
+    },
+    "user": {
+      "repository": "https://github.com/langrentaole/xbar-mirror-user-web",
+      "revision": "32868a0f3fcd42bafcf554dd9b36e7fc30369420",
+      "tag": "langrentaole/xbar-user:0.024.40",
+      "image": "langrentaole/xbar-user@sha256:f16cc4f5e635a5776e13ed7a0c2bc86b7cdb0aa17c57df3e26dcb503f40dbbf3"
+    },
+    "claude": {
+      "repository": "https://github.com/langrentaole/claude-gateway-xbar",
+      "revision": "7c95cf199f9a4c633d3678c0ab970c5245d12f09",
+      "tag": "langrentaole/claude-gateway:20261017-7c95cf1",
+      "image": "langrentaole/claude-gateway@sha256:eb6530bec5115e00729f2ebf28f7cb520826061bde34a6a905effb6a2ac3de90"
+    },
+    "gemini": {
+      "repository": "https://github.com/langrentaole/xbar-gemini-gateway",
+      "revision": "684e408734bee09a71a5af85883447e726b59a9c",
+      "tag": "langrentaole/gemini-gateway:20261017-684e408",
+      "image": "langrentaole/gemini-gateway@sha256:da49fb2b1bebae4f3b54bd5a22e777c565709cd43ef91eefc4d92af42539d5fc"
+    },
+    "grok": {
+      "repository": "https://github.com/langrentaole/xbar-grok-gateway",
+      "revision": "27696f692dcd5c5e7b5738a6d1da4cb2e3b058eb",
+      "tag": "langrentaole/grok-gateway:20261017-27696f6",
+      "image": "langrentaole/grok-gateway@sha256:f6d5dc3ff2b786b83b21531d12c6e57847e6a5b56f21c1baef134b5751c8da39"
+    }
+  }
+}
