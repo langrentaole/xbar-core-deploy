@@ -41,6 +41,56 @@ sync_release() {
   fi
 }
 
+guard_billing_upgrade() {
+  command -v python3 >/dev/null 2>&1 || {
+    echo "缺少 python3，无法安全检查账务数据库版本" >&2
+    exit 1
+  }
+  # Resolve Compose's actual project/volume names, including operator overrides.
+  resolved=$(compose config --format json | python3 -c '
+import json, sys
+config = json.load(sys.stdin)
+for value in (config["name"], config["volumes"]["mysql-data"]["name"]):
+    if not value or any(c.isspace() for c in value):
+        raise SystemExit("Invalid Compose project/volume name")
+    print(value)
+')
+  project=$(printf '%s\n' "$resolved" | sed -n '1p')
+  db_volume=$(printf '%s\n' "$resolved" | sed -n '2p')
+  db_container=$(compose ps --all -q db)
+  if [ -z "$db_container" ]; then
+    containers=$(compose ps --all -q)
+    volumes=$(docker volume ls --format '{{.Name}}')
+    if [ -n "$containers" ] || printf '%s\n' "$volumes" | grep -Fxq "$db_volume"; then
+      echo "发现已有部署或数据库卷，但没有可检查的 db 容器。请先仅恢复 db/cache 并检查数据库版本；不要启动 API/Edge。" >&2
+      exit 1
+    fi
+    return
+  fi
+  if ! schema=$(compose exec -T db sh -c 'export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"; exec mysql -uroot -N -B xbar -e "SELECT MAX(version_id) FROM goose_db_version WHERE is_applied=1"'); then
+    echo "无法读取现有数据库版本；请仅恢复 db/cache 后重试，不要启动 API/Edge。" >&2
+    exit 1
+  fi
+  case "$schema" in
+    127)
+      echo "schema 127：进入协调升级，将停用 Edge/API、备份数据库并升级到 schema 129。"
+      exec python3 "$ROOT_DIR/billing_upgrade.py" \
+        --compose-file "$ROOT_DIR/docker-compose.yml" --env-file "$ENV_FILE" \
+        --project "$project" --image "$(template_value XBAR_CORE_IMAGE)" \
+        --state-dir "${XBAR_CORE_UPGRADE_STATE_DIR:-/var/lib/xbar-core/billing-upgrade-129}" --apply
+      ;;
+    129) return ;;
+    128)
+      echo "拒绝自动部署 schema 128。请保持旧 API/Edge 停止并检查原始升级记录；只有 billing_upgrade.py 自己生成的有效检查点才可使用相同参数及 --apply --resume 恢复。没有该检查点时须人工恢复与核对备份，不能创建或伪造检查点。" >&2
+      exit 1
+      ;;
+    *)
+      echo "数据库版本不受支持，拒绝修改环境或启动服务；请检查数据库并制定恢复方案。" >&2
+      exit 1
+      ;;
+  esac
+}
+
 show_station_id() {
   station_id=$(compose exec -T -e "MYSQL_PWD=$(read_value MYSQL_PASSWORD)" db mysql -N -B -uxbar xbar -e "SELECT COALESCE(JSON_UNQUOTE(JSON_EXTRACT(certificate_json,'$.claims.stationId')),'') FROM local_station_license WHERE id=1 AND status='active' LIMIT 1" | tail -n 1)
   if [ -z "$station_id" ] || [ "$station_id" = "NULL" ]; then
@@ -133,12 +183,17 @@ case "$action" in
       exit 2
     fi
     validate
+    guard_billing_upgrade
+    sync_release
+    validate
     compose pull
     compose up -d --wait --remove-orphans
     compose ps
     ;;
   update)
     require_docker
+    validate
+    guard_billing_upgrade
     sync_release
     validate
     compose pull core-api core-edge
