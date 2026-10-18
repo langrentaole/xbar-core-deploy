@@ -99,8 +99,9 @@ for schema in 128 126 unreadable orphaned-volume; do
   done
   echo "PASS: $schema refuses before mutation"
 done
+for schema in 129 130; do
 for action in update install up; do
-  setup 129
+  setup "$schema"
   run "$action" || { cat "$TMP/output"; fail "129 routine $action failed"; }
   grep -q '^XBAR_CORE_IMAGE=langrentaole/xbar-core@sha256:' "$XBAR_CORE_ENV_FILE" || fail '129 pin not synced'
   if [ "$action" = update ]; then
@@ -108,7 +109,8 @@ for action in update install up; do
   fi
   grep -q ' up -d --wait --remove-orphans$' "$MOCK_LOG" || fail '129 routine startup missing'
   if grep -q '^helper ' "$MOCK_LOG"; then fail '129 incorrectly invokes migration helper'; fi
-  echo "PASS: schema 129 routine $action"
+  echo "PASS: schema $schema routine $action"
+done
 done
 for action in install up; do
   setup fresh
