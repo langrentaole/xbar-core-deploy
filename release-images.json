@@ -36,6 +36,12 @@
       "revision": "d3f0ea1d6ebd4d9dab667ed7d5765c48a134171f",
       "tag": "langrentaole/xbar-vibe:0.024.46",
       "image": "langrentaole/xbar-vibe@sha256:254af04213b2dce3bb186800793f954fe42e3df9f8e54c701b5c5d42de5de524"
+    },
+    "chatgpt": {
+      "repository": "https://github.com/langrentaole/xbar-chatgpt-gateway",
+      "revision": "9ddf7f69daad5513a344b8aebf1f5e8742d7b7b2",
+      "tag": "langrentaole/chatgpt-gateway:20261025-2",
+      "image": "langrentaole/chatgpt-gateway@sha256:f00e3593c471a412e06b7b6962083d8f55f6b6177735a566b3377cfa61970bf0"
     }
   }
 }
