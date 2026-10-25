@@ -73,13 +73,13 @@ for value in (config["name"], config["volumes"]["mysql-data"]["name"]):
   fi
   case "$schema" in
     127)
-      echo "schema 127：进入协调升级，将停用 Edge/API、备份数据库并升级至发布镜像支持的 schema 129/130。"
+      echo "schema 127：进入协调升级，将停用 Edge/API、备份数据库并升级至发布镜像支持的 schema 129/130/131。"
       exec python3 "$ROOT_DIR/billing_upgrade.py" \
         --compose-file "$ROOT_DIR/docker-compose.yml" --env-file "$ENV_FILE" \
         --project "$project" --image "$(template_value XBAR_CORE_IMAGE)" \
         --state-dir "${XBAR_CORE_UPGRADE_STATE_DIR:-/var/lib/xbar-core/billing-upgrade-129}" --apply
       ;;
-    129|130) return ;;
+    129|130|131) return ;;
     128)
       echo "拒绝自动部署 schema 128。请保持旧 API/Edge 停止并检查原始升级记录；只有 billing_upgrade.py 自己生成的有效检查点才可使用相同参数及 --apply --resume 恢复。没有该检查点时须人工恢复与核对备份，不能创建或伪造检查点。" >&2
       exit 1

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Coordinated, downtime-required registry Compose upgrade to billing schema 129.
 
-Run on the Docker host. Fresh deployments require schema 127. Schema 128/129
+Run on the Docker host. Fresh deployments require schema 127. Schema 128/129/130/131
 is accepted only when resuming this tool's durable migration-start checkpoint;
 an old API running after migration 128 can invalidate its legacy backfill.
 Default is a read-only plan. --apply drains Edge and
@@ -30,7 +30,7 @@ import time
 
 SERVICES = ('core-api', 'core-edge', 'db', 'cache')
 SCHEMA = 129
-SUPPORTED_FINAL_SCHEMAS = (129, 130)
+SUPPORTED_FINAL_SCHEMAS = (129, 130, 131)
 
 
 def digest(path):
@@ -234,9 +234,9 @@ class Upgrade:
             raise RuntimeError('Database and cache must be healthy')
         version = self.schema(items['db'])
         if version not in (127, 128, *SUPPORTED_FINAL_SCHEMAS):
-            raise RuntimeError('Expected existing schema 127, 128, 129 or 130')
+            raise RuntimeError('Expected existing schema 127, 128, 129, 130 or 131')
         if version != 127 and not (self.state and self.state.get('migration_started')):
-            raise RuntimeError('Fresh deployment requires schema 127; schema 128/129/130 needs a trusted migration checkpoint')
+            raise RuntimeError('Fresh deployment requires schema 127; schema 128/129/130/131 needs a trusted migration checkpoint')
         if self.state and not self.state.get('migration_started') and version != self.state['original_schema']:
             raise RuntimeError('Database schema changed before migration; inspect manually')
         if self.state and self.state['phase'] == 'complete':
@@ -249,7 +249,7 @@ class Upgrade:
             return
         if not self.args.apply:
             print('PLAN: pull pinned image; drain Edge then API; verify SQL backup; pin environment; '
-                  'start API and require schema 129/130 + health; start Edge and verify images/health. '
+                  'start API and require schema 129/130/131 + health; start Edge and verify images/health. '
                   'Downtime required; no automatic rollback. Current schema: ' + str(version))
             return
         if not self.state:
@@ -284,7 +284,7 @@ class Upgrade:
             self.save('migrating')
             self.start('core-api')
             if self.schema(self.topology()['db']) not in SUPPORTED_FINAL_SCHEMAS:
-                raise RuntimeError('Candidate did not reach supported schema 129/130')
+                raise RuntimeError('Candidate did not reach supported schema 129/130/131')
             self.save('api_healthy')
             self.start('core-edge')
             items = self.topology()

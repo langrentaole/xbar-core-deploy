@@ -1,11 +1,11 @@
 {
-  "version": "0.024.51",
+  "version": "0.025.00",
   "images": {
     "core": {
       "repository": "https://github.com/langrentaole/xbar-mirror",
-      "revision": "0be094d623dc304758c9ec5bf4e4091c5b16e869",
-      "tag": "langrentaole/xbar-core:0.024.51",
-      "image": "langrentaole/xbar-core@sha256:880d91c64cd5bae2e45a818ef4c253abde829b485cfd4f670224a181e08ae747"
+      "revision": "850175966526cb334a7e8c0a7f0fdb004fd7ce65",
+      "tag": "langrentaole/xbar-core:0.025.00",
+      "image": "langrentaole/xbar-core@sha256:31092e01d1ace3b9dd5079ec218b6d269930c2d888dbdb475961126394045c9b"
     },
     "user": {
       "repository": "https://github.com/langrentaole/xbar-mirror-user-web",
@@ -39,9 +39,9 @@
     },
     "chatgpt": {
       "repository": "https://github.com/langrentaole/xbar-chatgpt-gateway",
-      "revision": "ed408a6632d090196be994d25d1ccbe6d4756247",
-      "tag": "langrentaole/chatgpt-gateway:20261025-3",
-      "image": "langrentaole/chatgpt-gateway@sha256:8e69c1ed45df270746bbc9d079b4ad8257439821b0745b3b190b91b4b9f63d61"
+      "revision": "0ee0854738d05411bcc41469871667ee9c4d15f6",
+      "tag": "langrentaole/chatgpt-gateway:0.025.00",
+      "image": "langrentaole/chatgpt-gateway@sha256:cef9563200e39873c67b194c13fa2040db082e456ee44610a6aa51b3907fae4b"
     }
   }
 }

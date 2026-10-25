@@ -2,6 +2,7 @@
 # Exercise the real deployment shell with Docker and the migration boundary mocked.
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+RELEASE_IMAGE=$(sed -n 's/^XBAR_CORE_IMAGE=//p' "$ROOT/.env.example")
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT HUP INT TERM
 mkdir -p "$TMP/repo/tests" "$TMP/bin"
@@ -75,7 +76,7 @@ for action in update install up; do
   run "$action" || { cat "$TMP/output"; fail "127 $action failed"; }
   grep -q '^helper .*--apply' "$MOCK_LOG" || fail "127 $action bypassed coordinated helper"
   grep -q -- '--project test-project' "$MOCK_LOG" || fail 'resolved project not forwarded'
-  grep -q -- '--image langrentaole/xbar-core@sha256:e1ef1e42d9ba833b19da543490f04eee18e1e4302507dd2701b3094c65ca1bab' "$MOCK_LOG" || fail 'wrong migration target'
+  grep -Fq -- "--image $RELEASE_IMAGE" "$MOCK_LOG" || fail 'wrong migration target'
   if grep -Eq '^docker .* (up|pull) ' "$MOCK_LOG"; then fail "127 $action ran ordinary deployment"; fi
   echo "PASS: schema 127 $action uses coordinated upgrade"
 done
@@ -99,23 +100,23 @@ for schema in 128 126 unreadable orphaned-volume; do
   done
   echo "PASS: $schema refuses before mutation"
 done
-for schema in 129 130; do
+for schema in 129 130 131; do
 for action in update install up; do
   setup "$schema"
-  run "$action" || { cat "$TMP/output"; fail "129 routine $action failed"; }
-  grep -q '^XBAR_CORE_IMAGE=langrentaole/xbar-core@sha256:' "$XBAR_CORE_ENV_FILE" || fail '129 pin not synced'
+  run "$action" || { cat "$TMP/output"; fail "$schema routine $action failed"; }
+  grep -Fxq "XBAR_CORE_IMAGE=$RELEASE_IMAGE" "$XBAR_CORE_ENV_FILE" || fail "$schema pin not synced"
   if [ "$action" = update ]; then
-    grep -q ' pull core-api core-edge$' "$MOCK_LOG" || fail '129 did not pull app images'
+    grep -q ' pull core-api core-edge$' "$MOCK_LOG" || fail "$schema did not pull app images"
   fi
-  grep -q ' up -d --wait --remove-orphans$' "$MOCK_LOG" || fail '129 routine startup missing'
-  if grep -q '^helper ' "$MOCK_LOG"; then fail '129 incorrectly invokes migration helper'; fi
+  grep -q ' up -d --wait --remove-orphans$' "$MOCK_LOG" || fail "$schema routine startup missing"
+  if grep -q '^helper ' "$MOCK_LOG"; then fail "$schema incorrectly invokes migration helper"; fi
   echo "PASS: schema $schema routine $action"
 done
 done
 for action in install up; do
   setup fresh
   run "$action" || { cat "$TMP/output"; fail "fresh $action failed"; }
-  grep -q '^XBAR_CORE_IMAGE=langrentaole/xbar-core@sha256:' "$XBAR_CORE_ENV_FILE" || fail 'fresh pin not synced'
+  grep -Fxq "XBAR_CORE_IMAGE=$RELEASE_IMAGE" "$XBAR_CORE_ENV_FILE" || fail 'fresh pin not synced'
   grep -q ' up -d --wait --remove-orphans$' "$MOCK_LOG" || fail 'fresh startup missing'
   if grep -q '^helper ' "$MOCK_LOG"; then fail 'fresh install invoked migration helper'; fi
   echo "PASS: fresh $action"
