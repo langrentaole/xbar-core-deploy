@@ -3,9 +3,9 @@
   "images": {
     "core": {
       "repository": "https://github.com/langrentaole/xbar-mirror",
-      "revision": "850175966526cb334a7e8c0a7f0fdb004fd7ce65",
+      "revision": "61b4c9a00e753a839451db734327e6dff8f86bf1",
       "tag": "langrentaole/xbar-core:0.025.00",
-      "image": "langrentaole/xbar-core@sha256:31092e01d1ace3b9dd5079ec218b6d269930c2d888dbdb475961126394045c9b"
+      "image": "langrentaole/xbar-core@sha256:bdc4017f730138578dd1020a8a3b9b1dea36f4afd197eeb4a61b3eaab39ed68c"
     },
     "user": {
       "repository": "https://github.com/langrentaole/xbar-mirror-user-web",
