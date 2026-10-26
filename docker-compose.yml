@@ -72,6 +72,8 @@ services:
 
   core-edge:
     <<: *core-service
+    volumes:
+      - ui-releases:/var/lib/xbar/ui-releases
     environment:
       ENVIRONMENT: production
       PUBLIC_URL: https://${CORE_DOMAIN:?必须配置 CORE_DOMAIN}
@@ -82,6 +84,7 @@ services:
       API_UPSTREAM: http://core-api:8080
       USER_UPSTREAM: ${USER_UPSTREAM:?必须配置 USER_UPSTREAM}
       ADMIN_DIST: /app/web/admin
+      UI_RELEASE_DIR: /var/lib/xbar/ui-releases
     extra_hosts:
       - host.docker.internal:host-gateway
     depends_on:
@@ -111,6 +114,7 @@ services:
         condition: service_healthy
 
 volumes:
+  ui-releases:
   api-logs:
   station-identity:
   mysql-data:

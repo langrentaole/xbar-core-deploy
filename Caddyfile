@@ -8,8 +8,15 @@
 		format json
 	}
 
+	@uiEntry path / /c/* /plugins /plugins/* /mirrorSiteMaster /mirrorSiteMaster/ /mirrorSiteMaster/index.html /user /user/ /user/index.html /_xbar/ui-version
+	header @uiEntry {
+		Cache-Control "no-store, max-age=0"
+		CDN-Cache-Control "no-store"
+		Cloudflare-CDN-Cache-Control "no-store"
+		defer
+	}
+
 	reverse_proxy core-edge:3000 {
 		flush_interval -1
 	}
 }
-
