@@ -1,11 +1,11 @@
 {
-  "version": "0.025.07",
+  "version": "0.025.08",
   "images": {
     "core": {
       "repository": "https://github.com/langrentaole/xbar-mirror",
-      "revision": "5d6e6cc22c04ac51d4baa8ad1753a7e70776b845",
-      "tag": "langrentaole/xbar-core:0.025.07",
-      "image": "langrentaole/xbar-core@sha256:387abe06477967dec7066772faa78c8464fa9192a2ae9b75ab9edf479287f455"
+      "revision": "fdd75abab82f9ecb751eae974ae0d257ab5e7358",
+      "tag": "langrentaole/xbar-core:0.025.08",
+      "image": "langrentaole/xbar-core@sha256:b46ee8c6ebacc5a2cd0c38d9fcca668a1d80f8824d111c13c42e3cbf3d25357c"
     },
     "user": {
       "repository": "https://github.com/langrentaole/xbar-mirror-user-web",
@@ -21,9 +21,9 @@
     },
     "gemini": {
       "repository": "https://github.com/langrentaole/xbar-gemini-gateway",
-      "revision": "758224829f12da6442bb9276ef066f84084b77e8",
-      "tag": "langrentaole/gemini-gateway:20261022-security46",
-      "image": "langrentaole/gemini-gateway@sha256:4d24928fb0fbe380abc01cc21d75a57b645ed0da2912926efc9d6ec71352eadc"
+      "revision": "43ccac9a92038cd9dee43fdf6aa047bf98695c3c",
+      "tag": "langrentaole/gemini-gateway:0.025.08",
+      "image": "langrentaole/gemini-gateway@sha256:b9ebf9057abac02e644e694ea5ad926227c3c72c410c78a379e322b1dfd497f2"
     },
     "grok": {
       "repository": "https://github.com/langrentaole/xbar-grok-gateway",
