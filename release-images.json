@@ -1,17 +1,17 @@
 {
-  "version": "0.025.14",
+  "version": "0.025.15",
   "images": {
     "core": {
       "repository": "https://github.com/langrentaole/xbar-mirror",
-      "revision": "9326f3f2d95caf877f3665fda1c0974cc2861995",
-      "tag": "langrentaole/xbar-core:0.025.13",
-      "image": "langrentaole/xbar-core@sha256:d69e3891ce91bd5211dd95133c321322e99e238db80bbfe45ed1b4b75324fc1f"
+      "revision": "fb53839563615ae723767b5db1b9a27e63973056",
+      "tag": "langrentaole/xbar-core:0.025.15",
+      "image": "langrentaole/xbar-core@sha256:ecc4f6bf8f88cf3cdd31f2dbc77ace73d57a4e5239bc49cbf15c3b122877353c"
     },
     "user": {
       "repository": "https://github.com/langrentaole/xbar-mirror-user-web",
-      "revision": "8c8cc23671a8b1796a3014a3187d4f5dc8974905",
-      "tag": "langrentaole/xbar-user:0.025.14",
-      "image": "langrentaole/xbar-user@sha256:d5aada114ba553e50b99eb907657b81a0d9d714e31dd17894b2157c9dd4e68fa"
+      "revision": "eb65538d4dcce2ec3f5a9d3f1858f37892c72233",
+      "tag": "langrentaole/xbar-user:0.025.15",
+      "image": "langrentaole/xbar-user@sha256:28d982531522e1dbf1d45bca191c882cbcf1a09516fc96b438ee8426a604f97d"
     },
     "claude": {
       "repository": "https://github.com/langrentaole/claude-gateway-xbar",
