@@ -1,5 +1,5 @@
 {
-  "version": "0.025.10",
+  "version": "0.025.11",
   "images": {
     "core": {
       "repository": "https://github.com/langrentaole/xbar-mirror",
@@ -9,9 +9,9 @@
     },
     "user": {
       "repository": "https://github.com/langrentaole/xbar-mirror-user-web",
-      "revision": "a56247f142d7cc29abd740bd99c884e7fd2f45ab",
-      "tag": "langrentaole/xbar-user:0.025.10",
-      "image": "langrentaole/xbar-user@sha256:9a31ce2c29604af22ab3b6533f3b45d29752d82853500aaa1915b423006487b6"
+      "revision": "51b990556155975677ccf00a376ebfd02cb93186",
+      "tag": "langrentaole/xbar-user:0.025.11",
+      "image": "langrentaole/xbar-user@sha256:db9b7f09618fe736b799c55259d6f906b1bf6fc458dd9a3e8ab1296092393da5"
     },
     "claude": {
       "repository": "https://github.com/langrentaole/claude-gateway-xbar",
