@@ -39,9 +39,9 @@
     },
     "chatgpt": {
       "repository": "https://github.com/langrentaole/xbar-chatgpt-gateway",
-      "revision": "0bcb397d8094b569f3b47173e610c1ea96378489",
-      "tag": "langrentaole/chatgpt-gateway:0.025.07",
-      "image": "langrentaole/chatgpt-gateway@sha256:941baf7d38d47bac92e49d2ef5391a969be627118a3d6811f7a7e1f4b5ce7083"
+      "revision": "c7ee84cdcc9f712a8a51bf95961b59d2ea522968",
+      "tag": "langrentaole/chatgpt-gateway:0.025.08",
+      "image": "langrentaole/chatgpt-gateway@sha256:7194aebb21932b16fccdcda5b2bb0835acdf0049b51ea4cbe1606565a97a2085"
     }
   }
 }
