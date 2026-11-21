@@ -15,21 +15,21 @@
     },
     "claude": {
       "repository": "https://github.com/langrentaole/claude-gateway-xbar",
-      "revision": "79fd3a5649e4381f695157fba3d9eb342e3c4bbc",
-      "tag": "langrentaole/claude-gateway:20261022-security46",
-      "image": "langrentaole/claude-gateway@sha256:2e7c52382190b2926ae9ea844a8f27b0d20c978f5f22e2afdcbabfe7cdd4522c"
+      "revision": "33e0e8f5aec5b15eddd4574974b4fa6c3e70c366",
+      "tag": "langrentaole/claude-gateway:20261121-perf",
+      "image": "langrentaole/claude-gateway@sha256:c55c282693accf3b190f59eddad9abff192068cb5610d551178f809a6ded0e9e"
     },
     "gemini": {
       "repository": "https://github.com/langrentaole/xbar-gemini-gateway",
-      "revision": "43ccac9a92038cd9dee43fdf6aa047bf98695c3c",
-      "tag": "langrentaole/gemini-gateway:0.025.08",
-      "image": "langrentaole/gemini-gateway@sha256:b9ebf9057abac02e644e694ea5ad926227c3c72c410c78a379e322b1dfd497f2"
+      "revision": "04a4a36ea1a05b7e9d06d1b3b3d3361a4ce5c487",
+      "tag": "langrentaole/gemini-gateway:0.025.09",
+      "image": "langrentaole/gemini-gateway@sha256:4957f53fb87c60fd8981b320ace70a57d2ffa8aae3df5e1214e3549d942e1238"
     },
     "grok": {
       "repository": "https://github.com/langrentaole/xbar-grok-gateway",
-      "revision": "f5922283cdc91bd30aad2dc07d33dcc6a5842557",
-      "tag": "langrentaole/grok-gateway:20261022-security46",
-      "image": "langrentaole/grok-gateway@sha256:a7e1c8b86e6641d5663333dd0c12375c08a18b6f1b52da1c223c955f4c38bb49"
+      "revision": "a766996ff79628bd4c40e2b2f8a4b266ee11c7e1",
+      "tag": "langrentaole/grok-gateway:20261121-perf",
+      "image": "langrentaole/grok-gateway@sha256:46716f22250fb2a7b06fd8c4dd248a22c03a931329a0f11263b27d7b431aa1e9"
     },
     "vibe": {
       "repository": "https://github.com/langrentaole/xbar-mirror-vibe",
@@ -39,9 +39,9 @@
     },
     "chatgpt": {
       "repository": "https://github.com/langrentaole/xbar-chatgpt-gateway",
-      "revision": "c7ee84cdcc9f712a8a51bf95961b59d2ea522968",
-      "tag": "langrentaole/chatgpt-gateway:0.025.08",
-      "image": "langrentaole/chatgpt-gateway@sha256:7194aebb21932b16fccdcda5b2bb0835acdf0049b51ea4cbe1606565a97a2085"
+      "revision": "7702a97897bce613f43be3a5b1c75b3d708ac83f",
+      "tag": "langrentaole/chatgpt-gateway:0.025.09",
+      "image": "langrentaole/chatgpt-gateway@sha256:c358baf3c00eadd013d964bf335c6dc0f2c641b5600d3808c407c6a99492ad49"
     }
   }
 }
